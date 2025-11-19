@@ -11,13 +11,12 @@ export class Cli {
                 if (params[0] && params[1] && (params[1] === 'pending' || params[1] === 'progress' || params[1] === 'finished')) {
                     const newTask = createTask(params[0], params[1]);
                     this.tasklist.addTask(newTask);
-                    console.log('la tache a ete ajoutee');
                 }
                 else {
                     console.log('Parametres invalides');
                 }
                 break;
-            case 'remove':
+            case 'delete':
                 if (params[0]) {
                     this.tasklist.removeTask(Number(params[0]));
                 }
@@ -36,11 +35,12 @@ export class Cli {
                 }
                 break;
             case 'update':
-                if (params[0] && params[1] && (params[2] === 'pending' || params[2] === 'progress' || params[2] === 'finished')) {
+                if (params[0] && params[1] && (params[2] === 'pending' || params[2] === 'progress' || params[2] === 'finished') && params[3]) {
                     const id = Number(params[0]);
                     const title = params[1];
                     const status = params[2];
-                    this.tasklist.updateTask(id, title, status);
+                    const createdAt = params[3];
+                    this.tasklist.updateTask(id, title, status, createdAt);
                 }
                 else {
                     console.log('Parametres invalides');
@@ -48,8 +48,9 @@ export class Cli {
                 break;
             case 'help':
                 console.log('add "titre" "status" = ajouter une tache (mettez des guillemets si votre titre contient des espaces)');
-                console.log('remove <id> = supprimer une tache par son id');
+                console.log('delete <id> = supprimer une tache par son id');
                 console.log('list [status] = lister les taches, optionnellement filtrer par status');
+                console.log('update <id> "titre" "status" "createdAt" = mettre a jour une tache');
                 break;
         }
     }

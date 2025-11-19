@@ -10,7 +10,7 @@ export declare class Tasklist {
     constructor();
     showTasks(): void;
     addTask(task: Omit<Task, 'id'>): void;
-    updateTask(id: number, title: string, status: 'pending' | 'progress' | 'finished'): void;
+    updateTask(id: number, title: string, status: 'pending' | 'progress' | 'finished', createdAt: string): void;
     removeTask(id: number): void;
     listTasks(filter?: 'pending' | 'progress' | 'finished'): Task[];
     saveTasklist(filename?: string): void;

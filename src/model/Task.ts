@@ -1,4 +1,7 @@
 import { DataStore } from '../storage/DataStore.js';
+import { validate, validateAdd} from '../decorators/validate.js';
+import { timestamp } from '../decorators/timestamp.js';
+
 
 export interface Task {
     id: number;
@@ -22,20 +25,26 @@ export class Tasklist {
         this.store = new DataStore<Task>('tasklist.json');
     }
 
+    @timestamp
     showTasks(): void {
         const tasks = this.store.readAll();
         console.log(JSON.stringify(tasks, null, 2));
     }
 
+    @validateAdd
+    @timestamp
     addTask(task: Omit<Task, 'id'>): void {
         this.store.create(task as Task);
     }
 
-    updateTask(id: number, title: string, status: 'pending' | 'progress' | 'finished'): void {
+    @validate
+    @timestamp
+    updateTask(id: number, title: string, status: 'pending' | 'progress' | 'finished', createdAt: string): void {
         const task = this.store.findById(id);
         if (task) {
             task.title = title;
             task.status = status;
+            task.createdAt = createdAt;
             this.store.save();
             console.log(`la tache ${id} a ete mise a jour`);
         } else {
@@ -43,6 +52,8 @@ export class Tasklist {
         }
     }
 
+    @validate
+    @timestamp
     removeTask(id: number): void {
         const task = this.store.findById(id);
         if (task) {
@@ -53,16 +64,21 @@ export class Tasklist {
         }
     }
 
+
+    @timestamp
     listTasks(filter?: 'pending' | 'progress' | 'finished'): Task[] {
         const allTasks = this.store.readAll();
         if (!filter) return allTasks;
         return allTasks.filter(task => task.status === filter);
     }
 
+    
+    @timestamp
     saveTasklist(filename?: string): void {
         this.store.save();
     }
 
+    @timestamp
     loadTasklist(filename?: string): void {
         this.store.load();
     }
